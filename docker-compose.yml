@@ -1,0 +1,22 @@
+services:
+  idp-backend:
+    build:
+      context: ./idp-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./idp-backend/.env
+    restart: always
+
+  idp-frontend:
+    build:
+      context: ./idp-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./idp-frontend/.env
+    depends_on:
+      - idp-backend
+    restart: always

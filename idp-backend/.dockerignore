@@ -1,0 +1,10 @@
+.git
+.gitignore
+.env
+Dockerfile
+.dockerignore
+orchestrator.exe
+bin
+.vscode
+.idea
+*.exe
