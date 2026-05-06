@@ -1,5 +1,6 @@
 # Build stage
 FROM golang:alpine AS builder
+ENV GOTOOLCHAIN=auto
 
 WORKDIR /app
 
