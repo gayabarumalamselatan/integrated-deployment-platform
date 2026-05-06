@@ -1,19 +1,18 @@
 services:
   idp-backend:
-    # Gunakan image dari registry (GHCR/Docker Hub) hasil build GitHub Actions
     image: ghcr.io/gayabarumalamselatan/integrated-deployment-platform-backend:main
+    build:
+      context: ./idp-backend
     container_name: idp-backend
+    # ... rest of backend
     ports:
       - "8080:8080"
     env_file:
       - ./idp-backend/.env
     volumes:
-      # PENTING: Mount kubeconfig agar Backend Go bisa mengontrol cluster K3s
       - /etc/rancher/k3s/k3s.yaml:/root/.kube/config:ro
-      # Jika menggunakan timezone lokal
       - /etc/localtime:/etc/localtime:ro
     environment:
-      # Override jika perlu agar menunjuk ke internal cluster
       - KUBECONFIG=/root/.kube/config
     restart: always
 
@@ -21,7 +20,6 @@ services:
     image: ghcr.io/gayabarumalamselatan/integrated-deployment-platform-frontend:main
     build:
       context: ./idp-frontend
-      dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=http://192.168.2.202:8080
     container_name: idp-frontend
