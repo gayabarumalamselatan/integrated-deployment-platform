@@ -31,6 +31,7 @@ type ProjectRepository interface {
 	GetAll() ([]Project, error)
 	GetByID(id uuid.UUID) (*Project, error)
 	UpdateStatus(id uuid.UUID, status ProjectStatus) error
+	UpdateDomain(id uuid.UUID, domain string) error
 }
 
 type ProjectService interface {

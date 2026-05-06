@@ -92,14 +92,15 @@ func (s *projectService) ProcessDeployment(projectID uuid.UUID) error {
 
 	// 2. Trigger K8s deployment
 	s.repo.UpdateStatus(projectID, domain.StatusDeploying)
-	err = s.k8sService.DeployApp(context.Background(), project, buildResult.ImageName, buildResult.Port)
+	finalURL, err := s.k8sService.DeployApp(context.Background(), project, buildResult.ImageName, buildResult.Port)
 	if err != nil {
 		log.Printf("Deployment failed for %s: %v", project.Name, err)
 		s.repo.UpdateStatus(projectID, domain.StatusFailed)
 		return err
 	}
 
-	// Update status to READY
+	// Update domain/URL and status to READY
+	s.repo.UpdateDomain(projectID, finalURL)
 	s.repo.UpdateStatus(projectID, domain.StatusReady)
 	return nil
 }

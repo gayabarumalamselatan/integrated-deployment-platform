@@ -41,3 +41,8 @@ func (r *projectRepo) UpdateStatus(id uuid.UUID, status domain.ProjectStatus) er
 	_, err := r.db.Exec("UPDATE projects SET status = $1, updated_at = NOW() WHERE id = $2", status, id)
 	return err
 }
+
+func (r *projectRepo) UpdateDomain(id uuid.UUID, domain string) error {
+	_, err := r.db.Exec("UPDATE projects SET domain = $1, updated_at = NOW() WHERE id = $2", domain, id)
+	return err
+}

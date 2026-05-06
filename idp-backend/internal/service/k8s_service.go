@@ -27,9 +27,10 @@ func NewK8sService(client *kubernetes.Clientset) *K8sService {
 	return &K8sService{client: client}
 }
 
-func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, imageName string, port int) error {
+func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, imageName string, port int) (string, error) {
 	namespace := "idp-apps"
 	projectName := project.Name
+	finalURL := fmt.Sprintf("http://%s", project.Domain)
 
 	// 1. Create Namespace if not exists
 	_, _ = s.client.CoreV1().Namespaces().Create(ctx, &corev1.Namespace{
@@ -70,7 +71,7 @@ func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, ima
 
 	_, err := s.client.AppsV1().Deployments(namespace).Create(ctx, deployment, metav1.CreateOptions{})
 	if err != nil {
-		return fmt.Errorf("failed to create deployment: %v", err)
+		return "", fmt.Errorf("failed to create deployment: %v", err)
 	}
 
 	// 3. Service
@@ -90,7 +91,7 @@ func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, ima
 	}
 	_, err = s.client.CoreV1().Services(namespace).Create(ctx, svc, metav1.CreateOptions{})
 	if err != nil {
-		return fmt.Errorf("failed to create service: %v", err)
+		return "", fmt.Errorf("failed to create service: %v", err)
 	}
 
 	// 4. Ingress
@@ -98,10 +99,9 @@ func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, ima
 	ingress := &networkingv1.Ingress{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: projectName,
-			Annotations: map[string]string{}, 
 		},
 		Spec: networkingv1.IngressSpec{
-			IngressClassName: ptr.To("nginx"), 
+			IngressClassName: ptr.To("nginx"),
 			Rules: []networkingv1.IngressRule{
 				{
 					Host: project.Domain,
@@ -129,7 +129,7 @@ func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, ima
 	}
 	_, err = s.client.NetworkingV1().Ingresses(namespace).Create(ctx, ingress, metav1.CreateOptions{})
 	if err != nil {
-		return fmt.Errorf("failed to create ingress: %v", err)
+		return "", fmt.Errorf("failed to create ingress: %v", err)
 	}
 
 	// 5. Wait for Pod to be Running
@@ -147,15 +147,15 @@ func (s *K8sService) DeployApp(ctx context.Context, project *domain.Project, ima
 			pod := pods.Items[0]
 			if pod.Status.Phase == corev1.PodRunning {
 				log.Printf("[K8S] Pod %s is now Running", projectName)
-				return nil
+				return finalURL, nil
 			}
 			if pod.Status.Phase == corev1.PodFailed {
-				return fmt.Errorf("pod failed to start")
+				return "", fmt.Errorf("pod failed to start")
 			}
 		}
 	}
 
-	return fmt.Errorf("timeout waiting for pod to be ready")
+	return "", fmt.Errorf("timeout waiting for pod to be ready")
 }
 
 func (s *K8sService) GetLogs(ctx context.Context, projectName string) (string, error) {
