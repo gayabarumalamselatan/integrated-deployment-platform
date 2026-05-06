@@ -14,7 +14,9 @@ export default function Dashboard() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/projects`,
+      );
       if (response.ok) {
         const data = await response.json();
         setProjects(data);
@@ -31,7 +33,7 @@ export default function Dashboard() {
   }, []);
 
   const filteredProjects = (projects || []).filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+    p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -55,7 +57,9 @@ export default function Dashboard() {
             onClick={fetchProjects}
             className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 dark:border-gray-800 dark:bg-black dark:hover:bg-gray-900"
           >
-            <RefreshCcw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCcw
+              className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
             <span className="hidden sm:inline">Refresh</span>
           </button>
           <Link
@@ -92,7 +96,9 @@ export default function Dashboard() {
             No projects found
           </h3>
           <p className="mt-1 text-sm text-gray-500">
-            {search ? "Try adjusting your search query." : "Get started by creating your first project."}
+            {search
+              ? "Try adjusting your search query."
+              : "Get started by creating your first project."}
           </p>
           {!search && (
             <Link
@@ -100,7 +106,7 @@ export default function Dashboard() {
               className="mt-6 flex items-center gap-2 rounded-lg bg-black px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black"
             >
               <Plus className="h-4 w-4" />
-              Create Project
+              Deploy Project
             </Link>
           )}
         </div>
