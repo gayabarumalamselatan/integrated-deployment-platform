@@ -106,7 +106,7 @@ export default function Dashboard() {
               className="mt-6 flex items-center gap-2 rounded-lg bg-black px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-black"
             >
               <Plus className="h-4 w-4" />
-              Deploy Project
+              Deploy New Project
             </Link>
           )}
         </div>
