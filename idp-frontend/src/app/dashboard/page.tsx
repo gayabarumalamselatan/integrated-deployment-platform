@@ -11,12 +11,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/projects`,
-      );
+      const response = await fetch(`${apiUrl}/api/projects`);
       if (response.ok) {
         const data = await response.json();
         setProjects(data);
@@ -27,6 +27,8 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  console.log("url", apiUrl);
 
   useEffect(() => {
     fetchProjects();
