@@ -98,7 +98,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./idp-frontend
-          build-args: NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+          build-args: NEXT_PUBLIC_API_URL=http://192.168.2.202:8080
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
