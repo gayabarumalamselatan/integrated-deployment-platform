@@ -26,7 +26,7 @@ export function Navbar() {
                 <Command className="h-5 w-5" />
               </div>
               <span className="text-sm font-bold tracking-tight text-gray-900 dark:text-white uppercase">
-                Integrated Deploymeny Platform
+                Integrated Deployment Platform
               </span>
             </Link>
 
