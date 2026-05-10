@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  ExternalLink, 
-  GitPullRequest, 
-  GitBranch, 
-  Clock, 
-  Terminal, 
-  Globe, 
-  Settings, 
+import {
+  ArrowLeft,
+  ExternalLink,
+  GitPullRequest,
+  GitBranch,
+  Clock,
+  Terminal,
+  Globe,
+  Settings,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
 import { Project, DeploymentLog } from "@/types";
@@ -31,15 +31,15 @@ export default function ProjectDetail() {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
         const [projRes, logsRes] = await Promise.all([
-          fetch(`${apiUrl}/api/projects/${id}`),
-          fetch(`${apiUrl}/api/projects/${id}/logs`)
+          fetch(`/api/projects/${id}`),
+          fetch(`/api/projects/${id}/logs`),
         ]);
 
         if (projRes.ok) {
           const projData = await projRes.json();
           setProject(projData);
         }
-        
+
         if (logsRes.ok) {
           const logsData = await logsRes.json();
           setLogs(Array.isArray(logsData) ? logsData : []);
@@ -102,7 +102,9 @@ export default function ProjectDetail() {
             <div className="mt-1 flex items-center gap-3">
               <StatusBadge status={project.status} />
               <span className="text-sm text-gray-500">
-                Last updated {project.updated_at && !isNaN(new Date(project.updated_at).getTime())
+                Last updated{" "}
+                {project.updated_at &&
+                !isNaN(new Date(project.updated_at).getTime())
                   ? `${formatDistanceToNow(new Date(project.updated_at))} ago`
                   : "recently"}
               </span>
@@ -139,11 +141,15 @@ export default function ProjectDetail() {
             <div className="relative aspect-video w-full bg-gray-100 dark:bg-gray-900">
               {project.status === "READY" ? (
                 <div className="flex h-full w-full items-center justify-center">
-                   <div className="text-center">
-                     <Globe className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                     <p className="text-sm text-gray-400 font-medium">Preview available at</p>
-                     <p className="text-lg text-gray-900 dark:text-white font-bold">{project.domain}</p>
-                   </div>
+                  <div className="text-center">
+                    <Globe className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-sm text-gray-400 font-medium">
+                      Preview available at
+                    </p>
+                    <p className="text-lg text-gray-900 dark:text-white font-bold">
+                      {project.domain}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center">
@@ -176,7 +182,9 @@ export default function ProjectDetail() {
                 logs.map((log, index) => (
                   <div key={log.id} className="mb-1 flex gap-4">
                     <span className="shrink-0 select-none text-gray-600 w-24">
-                      {new Date(log.timestamp).toLocaleTimeString([], { hour12: false })}
+                      {new Date(log.timestamp).toLocaleTimeString([], {
+                        hour12: false,
+                      })}
                     </span>
                     <span className="whitespace-pre-wrap">{log.content}</span>
                   </div>
@@ -212,7 +220,9 @@ export default function ProjectDetail() {
                 </label>
                 <div className="mt-1 flex items-center gap-2 font-medium text-gray-900 dark:text-white">
                   <GitPullRequest className="h-4 w-4 text-gray-400" />
-                  <span className="truncate">{project.git_url.split('/').slice(-2).join('/')}</span>
+                  <span className="truncate">
+                    {project.git_url.split("/").slice(-2).join("/")}
+                  </span>
                 </div>
               </div>
               <div>
@@ -232,7 +242,8 @@ export default function ProjectDetail() {
               Danger Zone
             </h2>
             <p className="mb-6 text-xs text-rose-700/80 dark:text-rose-400/60 leading-relaxed">
-              Once you delete a project, there is no going back. Please be certain.
+              Once you delete a project, there is no going back. Please be
+              certain.
             </p>
             <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90">
               <Trash2 className="h-4 w-4" />

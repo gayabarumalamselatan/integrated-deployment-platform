@@ -11,12 +11,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${apiUrl}/api/projects`);
+      // const response = await fetch(`${apiUrl}/api/projects`);
+      const response = await fetch("/api/projects");
       if (response.ok) {
         const data = await response.json();
         setProjects(data);
@@ -28,7 +29,7 @@ export default function Dashboard() {
     }
   };
 
-  console.log("url", apiUrl);
+  // console.log("url", apiUrl);
 
   useEffect(() => {
     fetchProjects();
