@@ -29,9 +29,10 @@ export default function ProjectDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
         const [projRes, logsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/${id}`),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/${id}/logs`)
+          fetch(`${apiUrl}/api/projects/${id}`),
+          fetch(`${apiUrl}/api/projects/${id}/logs`)
         ]);
 
         if (projRes.ok) {

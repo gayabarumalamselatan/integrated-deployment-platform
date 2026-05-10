@@ -4,9 +4,8 @@ services:
     build:
       context: ./idp-backend
     container_name: idp-backend
-    # ... rest of backend
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080" # Removed for production-safe internal-only access
     env_file:
       - ./idp-backend/.env
     volumes:
@@ -14,6 +13,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - KUBECONFIG=/root/.kube/config
+      - GIN_MODE=release
     restart: always
 
   idp-frontend:
@@ -21,7 +21,7 @@ services:
     build:
       context: ./idp-frontend
       args:
-        - NEXT_PUBLIC_API_URL=http://192.168.2.202:8080
+        - NEXT_PUBLIC_API_URL= # Empty for relative paths
     container_name: idp-frontend
     ports:
       - "3000:3000"

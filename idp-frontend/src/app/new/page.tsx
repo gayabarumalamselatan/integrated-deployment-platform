@@ -26,7 +26,8 @@ export default function NewProject() {
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+      const response = await fetch(`${apiUrl}/api/projects`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export default function NewProject() {
         setError(data.message || "Failed to create project");
       }
     } catch (err) {
-      setError(`Connection refused. Make sure your backend is running at ${process.env.NEXT_PUBLIC_API_URL}`);
+      setError("Connection refused. Make sure the backend service is reachable.");
     } finally {
       setLoading(false);
     }
