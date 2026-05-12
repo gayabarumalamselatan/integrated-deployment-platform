@@ -152,14 +152,20 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-# Validation Step
-RUN if [ ! -d "out" ] || [ ! -f "out/index.html" ]; then \
-    echo "Build succeeded but no valid output found (out/index.html missing)"; \
+# Validation and normalization Step
+RUN if [ -d "dist" ] && [ -f "dist/index.html" ]; then \
+    mv dist dist_output; \
+elif [ -d "build" ] && [ -f "build/index.html" ]; then \
+    mv build dist_output; \
+elif [ -d "out" ] && [ -f "out/index.html" ]; then \
+    mv out dist_output; \
+else \
+    echo "Build succeeded but no valid output found (dist/build/out index.html missing)"; \
     exit 1; \
-    fi
+fi
 
 FROM nginx:alpine
-COPY --from=builder /app/out /usr/share/nginx/html
+COPY --from=builder /app/dist_output /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]`
 
