@@ -19,8 +19,8 @@ FROM alpine:latest
 
 WORKDIR /app
 
-# Install certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates
+# Install certificates for HTTPS requests and git for cloning repos
+RUN apk --no-cache add ca-certificates git
 
 # Copy binary from builder
 COPY --from=builder /app/orchestrator .
