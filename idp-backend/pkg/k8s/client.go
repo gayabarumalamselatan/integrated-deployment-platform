@@ -7,10 +7,15 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func NewK8sClient(kubeconfigPath string) *kubernetes.Clientset {
+func NewK8sClient(kubeconfigPath string, hostOverride string) *kubernetes.Clientset {
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
 	if err != nil {
 		log.Fatalf("Failed to build kubeconfig: %v", err)
+	}
+
+	// Override host if provided (useful for Docker-to-Host communication)
+	if hostOverride != "" {
+		config.Host = hostOverride
 	}
 
 	clientset, err := kubernetes.NewForConfig(config)

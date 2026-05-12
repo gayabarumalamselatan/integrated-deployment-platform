@@ -26,7 +26,7 @@ func main() {
 
 	// 2. Initialize Dependencies
 	pgDB := db.NewPostgresDB(cfg.DBURL)
-	k8sClient := k8s.NewK8sClient(cfg.KubeConfig)
+	k8sClient := k8s.NewK8sClient(cfg.KubeConfig, cfg.K8SHost)
 	kafkaSvc := service.NewKafkaService(cfg.KafkaBrokers)
 	defer kafkaSvc.Close()
 

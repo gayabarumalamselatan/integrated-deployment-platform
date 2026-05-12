@@ -11,6 +11,7 @@ type Config struct {
 	BaseDomain    string
 	ServerPort    string
 	RegistryURL   string
+	K8SHost       string
 }
 
 func LoadConfig() *Config {
@@ -21,6 +22,7 @@ func LoadConfig() *Config {
 		BaseDomain:   getEnv("BASE_DOMAIN", "idp.dev"),
 		ServerPort:   getEnv("PORT", "8080"),
 		RegistryURL:  getEnv("DOCKER_REGISTRY", "localhost:5000"),
+		K8SHost:      getEnv("K8S_HOST", ""),
 	}
 }
 
